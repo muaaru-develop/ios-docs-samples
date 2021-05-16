@@ -94,9 +94,6 @@ class ViewController: UIViewController {
                                      metrics: nil,
                                      views: [ "intentTF" : inputTextField]))
     NSLayoutConstraint.activate(constraints)
-    let colorScheme = ApplicationScheme.shared.colorScheme
-    MDCTextFieldColorThemer.applySemanticColorScheme(colorScheme,
-                                                     to: self.inputTextFieldController)
     bringViewToFront()
   }
 

@@ -17,29 +17,14 @@
 import Foundation
 import googleapis
 import AVFoundation
-import AuthLibrary
-import Firebase
 
+private let apiKey = "[YOUR API KEY]"
 class NaturalLanguageService {
   private var client : LanguageService = LanguageService(host: ApplicationConstants.Host)
   private var writer : GRXBufferedPipe = GRXBufferedPipe()
   private var call : GRPCProtoCall!
   static let sharedInstance = NaturalLanguageService()
   var authToken: String = ""
-
-  func getDeviceID(callBack: @escaping (String)->Void) {
-    InstanceID.instanceID().instanceID { (result, error) in
-      if let error = error {
-        print("Error fetching remote instance ID: \(error)")
-        callBack( "")
-      } else if let result = result {
-        print("Remove instance ID token: \(result.token)")
-        callBack( result.token)
-      } else {
-        callBack( "")
-      }
-    }
-  }
 
   func textToSentiment(text:String, completionHandler: @escaping (_ documentResponse: AnalyzeSentimentResponse, _ entityResponse: AnalyzeEntitySentimentResponse) -> Void) {
     let documet: Document = Document()
@@ -61,7 +46,7 @@ class NaturalLanguageService {
       print("analyzeSentimentResponse\(response)")
       self.textToEntitySentimentAnalysis(document: documet, analyzeSentimentResponse: response, completionHandler: completionHandler)
     }
-    self.call.requestHeaders.setObject(NSString(string:authToken), forKey:NSString(string:"Authorization"))
+    call.requestHeaders.setObject(NSString(string: apiKey), forKey: NSString(string: "X-Goog-Api-Key"))
     // if the API key has a bundle ID restriction, specify the bundle ID like this
     self.call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
     print("HEADERS:\(String(describing: call.requestHeaders))")
@@ -84,7 +69,7 @@ class NaturalLanguageService {
       print("analyzeSentimentResponse\(response)")
       completionHandler(analyzeSentimentResponse, response)
     })
-    self.call.requestHeaders.setObject(NSString(string:authToken), forKey:NSString(string:"Authorization"))
+    call.requestHeaders.setObject(NSString(string: apiKey), forKey: NSString(string: "X-Goog-Api-Key"))
     // if the API key has a bundle ID restriction, specify the bundle ID like this
     self.call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
     print("HEADERS:\(String(describing: call.requestHeaders))")
@@ -111,7 +96,7 @@ class NaturalLanguageService {
       print("analyzeEntitiesResponse\(response)")
       completionHandler(response)
     }
-    self.call.requestHeaders.setObject(NSString(string:authToken), forKey:NSString(string:"Authorization"))
+    call.requestHeaders.setObject(NSString(string: apiKey), forKey: NSString(string: "X-Goog-Api-Key"))
     // if the API key has a bundle ID restriction, specify the bundle ID like this
     self.call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
     print("HEADERS:\(String(describing: call.requestHeaders))")
@@ -138,7 +123,7 @@ class NaturalLanguageService {
       print("analyzeSyntaxResponse\(response)")
       completionHandler(response)
     }
-    self.call.requestHeaders.setObject(NSString(string:authToken), forKey:NSString(string:"Authorization"))
+    call.requestHeaders.setObject(NSString(string: apiKey), forKey: NSString(string: "X-Goog-Api-Key"))
     // if the API key has a bundle ID restriction, specify the bundle ID like this
     self.call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
     print("HEADERS:\(String(describing: call.requestHeaders))")
@@ -166,16 +151,10 @@ class NaturalLanguageService {
       print("classifyTextResponse\(response)")
       completionHandler(response)
     }
-    self.call.requestHeaders.setObject(NSString(string:authToken), forKey:NSString(string:"Authorization"))
+    call.requestHeaders.setObject(NSString(string: apiKey), forKey: NSString(string: "X-Goog-Api-Key"))
     // if the API key has a bundle ID restriction, specify the bundle ID like this
-    self.call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
+    call.requestHeaders.setObject(NSString(string:Bundle.main.bundleIdentifier!), forKey:NSString(string:"X-Ios-Bundle-Identifier"))
     print("HEADERS:\(String(describing: call.requestHeaders))")
     call.start()
   }
 }
-
-
-
-
-
-
